@@ -1,6 +1,6 @@
 # Codex instructions — TCP Lab IWA
 
-Read `README.md`, `docs/ARCHITECTURE.md`, and `tasks/PHASE_3.md` before modifying Phase 3 code. Keep Phase 1 and Phase 2 tasks as baseline records.
+Read `README.md`, `docs/ARCHITECTURE.md`, `docs/TLS_DESIGN.md`, and `tasks/PHASE_3A.md` before starting Phase 3A. Keep Phases 1–3 as historical baselines.
 
 ## Mission
 Produce a **real, installable Signed Web Bundle** for Vivaldi 8.2 / Chromium 152 on macOS ARM64 and empirically verify Direct Sockets API availability. This is an exploratory browser-native networking project, **not** a MongoDB client yet.
@@ -15,8 +15,8 @@ Produce a **real, installable Signed Web Bundle** for Vivaldi 8.2 / Chromium 152
 - Keep output in `dist/`; private signing keys belong in ignored `keys/`, never commit them.
 - Be precise: build validation != runtime success. Record manual Vivaldi results separately.
 
-## Current work item — Phase 3
-Phase 2 raw TCP HTTP round-trip has been verified by the user in Vivaldi (`HTTP/1.1 200 OK`, 932 bytes, 556 ms). Implement `tasks/PHASE_3.md`: evaluate a real TLS 1.3 client on top of Direct Sockets, preferably with a maintained WASM TLS library. Fail closed on certificate validation. Preserve existing working P1/P2 tests and the IWA signing identity. Do not add MongoDB or a backend. If a verified TLS engine cannot be integrated, report a reproducible blocker instead of a fake success.
+## Current work item — Phase 3A
+The TLS feasibility investigation from Phase 3 is blocked, but the previous TCP/HTTP tests succeeded in Vivaldi. Follow `tasks/PHASE_3A.md` to evaluate current TLS engines and produce a reproducible, evidence-backed decision. Do practical compilation/integration experiments where feasible rather than another speculative overview. A real handshake with certificate and hostname validation is required before claiming any TLS success. Keep Phase 1/2 behavior intact, preserve the signed IWA identity, do not add MongoDB or a backend, and report blockers precisely.
 
 ## Acceptance gates
 1. `make check` passes.
