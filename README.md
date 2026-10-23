@@ -1,6 +1,6 @@
 # TCP Lab — Isolated Web App
 
-Research prototype for **direct TCP networking in Vivaldi/Chromium using JavaScript**. Goal: eventually investigate direct MongoDB Atlas Wire Protocol access, without a local service or a REST proxy. **Phase 2 proves plaintext HTTP bytes over Direct Sockets; TLS and MongoDB remain out of scope.**
+Research prototype for **direct TCP networking in Vivaldi/Chromium using JavaScript**. Goal: eventually investigate direct MongoDB Atlas Wire Protocol access, without a local service or a REST proxy. **Phase 2 proves plaintext HTTP bytes over Direct Sockets; Phase 3 documents a fail-closed TLS feasibility blocker; MongoDB remains out of scope.**
 
 ## Target environment
 - Vivaldi 8.2.4133.91 / Chromium 152.0.7977.170
@@ -28,6 +28,7 @@ tests/test_project.py         Offline project checks
 tests/test_tcp.mjs            Fake-socket HTTP stream tests
 docs/ARCHITECTURE.md          Decisions & boundaries
 docs/EXPERIMENTS.md           Manual test record
+docs/TLS_DESIGN.md            Phase 3 TLS feasibility and blocker
 tasks/PHASE_1.md              Codex implementation task
 ```
 
@@ -100,7 +101,10 @@ Use Go build-time tools where practical; project has **no Node.js runtime, npm d
 6. Record the visible status line, byte count, endpoint, and errors in
    `docs/EXPERIMENTS.md`.
 
-Do not add Atlas passwords, SRV records, or MongoDB operations at this stage. TCP port 80 on example.com is only a connectivity probe, not a protocol validation.
+TLS is not currently implemented; see `docs/TLS_DESIGN.md` for the evidence
+and next diagnostic experiment. Do not add Atlas passwords, SRV records, or
+MongoDB operations at this stage. TCP port 80 on example.com is only a
+connectivity/plaintext HTTP probe, not a protocol validation.
 
 ## Official references
 - https://developer.chrome.com/docs/iwa/introduction

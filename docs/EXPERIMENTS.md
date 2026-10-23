@@ -45,6 +45,19 @@ Record date, app bundle identity, selected host/port, exact visible errors, and 
 - Phase 2 runtime gate: **plaintext round-trip requires manual Vivaldi
   verification; TLS remains assessed, not implemented or verified.**
 
+## Phase 3 feasibility — 2026-10-22
+
+- Direct Sockets has no documented native TLS upgrade (`secureTransport` or
+  `startTls`); it exposes raw TCP streams only. See `docs/TLS_DESIGN.md`.
+- A browser-compatible rustls/WASM engine was not integrated: this workspace
+  has no Rust/WASM toolchain, and rustls's standard provider path does not
+  currently support WebAssembly. The Emscripten AWS-LC route is experimental
+  and does not provide a ready browser trust-store/hostname-validation layer.
+- No HTTPS action was added, because claiming success without a validated TLS
+  engine would violate the fail-closed requirement.
+- Phase 3 status: **BLOCKED at TLS engine/toolchain feasibility; no TLS or
+  MongoDB implementation.**
+
 ## Manual Vivaldi runtime result — 2026-10-22 (user-observed)
 
 - Signed Web Bundle V2 installed successfully using `vivaldi://web-app-internals`.
@@ -67,4 +80,3 @@ User-observed runtime results from installed TCP Lab Phase 2 on Vivaldi / macOS 
 - Response included HTTP headers (`Transfer-Encoding: chunked`, `Connection: close`) and the Example Domain HTML payload.
 - No `fetch()`, browser HTTP API, proxy, backend, or TLS was used for the raw socket request.
 - Scope of proof: application-level bidirectional plaintext TCP exchange. TLS, MongoDB protocol, and Atlas connectivity remain unverified.
-
