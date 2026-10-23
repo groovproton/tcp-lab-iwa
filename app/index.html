@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>TCP Lab</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <main>
+    <h1>TCP Lab <small>Phase 1</small></h1>
+    <p>Isolated Web App · Direct Sockets experiment · no backend</p>
+    <section><h2>Capabilities</h2><dl id="capabilities"></dl></section>
+    <section>
+      <h2>TCP probe</h2>
+      <form id="probe-form">
+        <label>Host <input name="host" id="host" value="example.com" required autocomplete="off"></label>
+        <label>Port <input type="number" name="port" id="port" value="80" min="1" max="65535" required></label>
+        <button type="submit" id="probe-button">Test TCP</button>
+      </form>
+      <p class="hint">A successful connect proves TCP access, not that MongoDB works.</p>
+      <output id="status" aria-live="polite">No test performed</output>
+    </section>
+    <section><h2>Log</h2><pre id="log" aria-live="polite"></pre></section>
+  </main>
+</body>
+</html>
