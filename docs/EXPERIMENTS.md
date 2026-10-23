@@ -22,3 +22,13 @@ Record date, app bundle identity, selected host/port, exact visible errors, and 
 - `make bundle`: passed; generated `dist/tcp-lab.swbn`
 - `make verify`: passed; V2 structure, preserved Web Bundle ID, and Ed25519 signatures checked
 - Vivaldi install/runtime test: **UNVERIFIED in Codex environment**
+
+## Manual Vivaldi runtime result — 2026-10-22 (user-observed)
+
+- Signed Web Bundle V2 installed successfully using `vivaldi://web-app-internals`.
+- macOS registered `TCP Lab.app` under Vivaldi Apps.
+- Runtime: `typeof TCPSocket` = `function`; `typeof UDPSocket` = `function`.
+- `crossOriginIsolated` = `true`; `isSecureContext` = `true`.
+- User-triggered TCP connect to `example.com:80` succeeded in approximately 553 ms.
+- This validates a **TCP connection only**. No application payload read/write or TLS handshake has yet been demonstrated.
+- Next experiment: `tasks/PHASE_2.md`.
