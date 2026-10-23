@@ -1,6 +1,6 @@
 # Codex instructions — TCP Lab IWA
 
-Read `README.md`, `docs/ARCHITECTURE.md`, and `tasks/PHASE_2.md` before modifying Phase 2 code. Keep `tasks/PHASE_1.md` as the baseline record.
+Read `README.md`, `docs/ARCHITECTURE.md`, and `tasks/PHASE_3.md` before modifying Phase 3 code. Keep Phase 1 and Phase 2 tasks as baseline records.
 
 ## Mission
 Produce a **real, installable Signed Web Bundle** for Vivaldi 8.2 / Chromium 152 on macOS ARM64 and empirically verify Direct Sockets API availability. This is an exploratory browser-native networking project, **not** a MongoDB client yet.
@@ -15,8 +15,8 @@ Produce a **real, installable Signed Web Bundle** for Vivaldi 8.2 / Chromium 152
 - Keep output in `dist/`; private signing keys belong in ignored `keys/`, never commit them.
 - Be precise: build validation != runtime success. Record manual Vivaldi results separately.
 
-## Current work item — Phase 2
-Phase 1 has been installed and TCP connected in Vivaldi (user-observed). Implement `tasks/PHASE_2.md` next: prove HTTP request/response bytes using TCPSocket and investigate native TLS feasibility. Retain signed-bundle identity, do not implement MongoDB, and do not claim Phase 2 runtime verification before user tests.
+## Current work item — Phase 3
+Phase 2 raw TCP HTTP round-trip has been verified by the user in Vivaldi (`HTTP/1.1 200 OK`, 932 bytes, 556 ms). Implement `tasks/PHASE_3.md`: evaluate a real TLS 1.3 client on top of Direct Sockets, preferably with a maintained WASM TLS library. Fail closed on certificate validation. Preserve existing working P1/P2 tests and the IWA signing identity. Do not add MongoDB or a backend. If a verified TLS engine cannot be integrated, report a reproducible blocker instead of a fake success.
 
 ## Acceptance gates
 1. `make check` passes.
