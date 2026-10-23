@@ -1,4 +1,4 @@
-import { capabilities, probeTcp } from './tcp.js';
+import { capabilities, httpRoundTrip, probeTcp } from './tcp.js';
 const byId = id => document.getElementById(id);
 const log = (text) => {
   const timestamp = new Date().toISOString();
@@ -28,6 +28,26 @@ byId('probe-form').addEventListener('submit', async (event) => {
     const message = `${error?.name || 'Error'}: ${error?.message || String(error)}`;
     byId('status').textContent = `Failed: ${message}`;
     log(`FAIL ${message}`);
+  } finally {
+    button.disabled = false;
+  }
+});
+byId('http-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const button = byId('http-button');
+  button.disabled = true;
+  byId('status').textContent = 'Sending plaintext HTTP…';
+  const host = byId('host').value;
+  const port = byId('port').value;
+  log(`HTTP round-trip → ${host}:${port}`);
+  try {
+    const result = await httpRoundTrip(host, port);
+    byId('status').textContent = `${result.statusLine} · ${result.bytesRead} bytes · ${result.elapsedMs} ms`;
+    log(`HTTP SUCCESS ${JSON.stringify(result)}`);
+  } catch (error) {
+    const message = `${error?.name || 'Error'}: ${error?.message || String(error)}`;
+    byId('status').textContent = `HTTP failed: ${message}`;
+    log(`HTTP FAIL ${message}`);
   } finally {
     button.disabled = false;
   }

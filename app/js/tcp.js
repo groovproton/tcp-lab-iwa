@@ -39,3 +39,66 @@ export async function probeTcp(host, port, timeoutMs = 7000) {
     }
   }
 }
+
+const HTTP_REQUEST_LIMIT = 4096;
+const HTTP_RESPONSE_LIMIT = 64 * 1024;
+const HTTP_PREVIEW_LIMIT = 2048;
+
+function withDeadline(promise, deadline, message) {
+  const remaining = Math.max(0, deadline - performance.now());
+  let timer;
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(message)), remaining); }),
+  ]).finally(() => clearTimeout(timer));
+}
+
+export async function httpRoundTrip(host, port, timeoutMs = 7000) {
+  const endpoint = validateEndpoint(host, port);
+  if (typeof globalThis.TCPSocket !== 'function') throw new Error('TCPSocket is unavailable in this context');
+  const request = `GET / HTTP/1.1\r\nHost: ${endpoint.hostname}\r\nConnection: close\r\n\r\n`;
+  const requestBytes = new TextEncoder().encode(request);
+  if (requestBytes.byteLength > HTTP_REQUEST_LIMIT) throw new Error('HTTP request exceeds safety limit');
+  const started = performance.now();
+  const deadline = started + timeoutMs;
+  let socket;
+  let reader;
+  let writer;
+  const chunks = [];
+  let totalBytes = 0;
+  try {
+    socket = new globalThis.TCPSocket(endpoint.hostname, endpoint.port);
+    const { readable, writable } = await withDeadline(socket.opened, deadline, `HTTP connect timeout after ${timeoutMs} ms`);
+    writer = writable.getWriter();
+    await withDeadline(writer.write(requestBytes), deadline, `HTTP write timeout after ${timeoutMs} ms`);
+    writer.releaseLock();
+    writer = undefined;
+    reader = readable.getReader();
+    while (totalBytes < HTTP_RESPONSE_LIMIT) {
+      const { value, done } = await withDeadline(reader.read(), deadline, `HTTP read timeout after ${timeoutMs} ms`);
+      if (done) break;
+      if (!value?.byteLength) continue;
+      const remaining = HTTP_RESPONSE_LIMIT - totalBytes;
+      const chunk = value.slice(0, remaining);
+      chunks.push(chunk);
+      totalBytes += chunk.byteLength;
+    }
+    const responseBytes = new Uint8Array(totalBytes);
+    let offset = 0;
+    for (const chunk of chunks) { responseBytes.set(chunk, offset); offset += chunk.byteLength; }
+    const preview = new TextDecoder('utf-8', { fatal: false }).decode(responseBytes).slice(0, HTTP_PREVIEW_LIMIT);
+    const statusLine = preview.split(/\r?\n/, 1)[0] || '(no HTTP status line)';
+    return { endpoint, statusLine, bytesRead: totalBytes, elapsedMs: Math.round(performance.now() - started), preview };
+  } finally {
+    if (reader) {
+      try { await reader.cancel(); } catch { /* best effort */ }
+      try { reader.releaseLock(); } catch { /* already released */ }
+    }
+    if (writer) {
+      try { writer.releaseLock(); } catch { /* already released */ }
+    }
+    if (socket) {
+      try { await socket.close(); } catch { /* best effort */ }
+    }
+  }
+}

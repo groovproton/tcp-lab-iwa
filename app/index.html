@@ -10,7 +10,7 @@
 </head>
 <body>
   <main>
-    <h1>TCP Lab <small>Phase 1</small></h1>
+    <h1>TCP Lab <small>Phase 2</small></h1>
     <p>Isolated Web App · Direct Sockets experiment · no backend</p>
     <section><h2>Capabilities</h2><dl id="capabilities"></dl></section>
     <section>
@@ -21,6 +21,10 @@
         <button type="submit" id="probe-button">Test TCP</button>
       </form>
       <p class="hint">A successful connect proves TCP access, not that MongoDB works.</p>
+      <form id="http-form">
+        <button type="submit" id="http-button">HTTP round-trip</button>
+      </form>
+      <p class="hint">Plaintext HTTP only: sends GET / over raw TCP and reads the response. This is not TLS or MongoDB.</p>
       <output id="status" aria-live="polite">No test performed</output>
     </section>
     <section><h2>Log</h2><pre id="log" aria-live="polite"></pre></section>

@@ -23,6 +23,28 @@ Record date, app bundle identity, selected host/port, exact visible errors, and 
 - `make verify`: passed; V2 structure, preserved Web Bundle ID, and Ed25519 signatures checked
 - Vivaldi install/runtime test: **UNVERIFIED in Codex environment**
 
+## Phase 2 implementation — 2026-10-22
+
+- Added a separate user-triggered `HTTP round-trip` action using only
+  `TCPSocket.opened` plus its `ReadableStream` and `WritableStream`.
+- The request is plaintext `GET / HTTP/1.1` to the user-selected endpoint,
+  defaulting to `example.com:80`; no request occurs on app startup.
+- Reads are incremental, capped at 64 KiB, with a 2 KiB decoded preview and a
+  bounded overall deadline. Reader/writer locks are released and the socket is
+  closed on success, peer closure, errors, and timeout.
+- Offline fake-socket coverage: fragmented response, timeout, oversized
+  response, and graceful server closure.
+- TLS feasibility: the current Direct Sockets specification exposes raw TCP
+  streams and options such as buffer sizes, `noDelay`, `keepAliveDelay`, and
+  `dnsQueryType`; it does not expose `secureTransport` or `startTls`. WebCrypto
+  supplies cryptographic primitives, not a TLS record/handshake implementation,
+  certificate-chain validation, SNI, cipher negotiation, or browser trust-root
+  integration. A future browser-only experiment would need a carefully audited
+  bundled TLS/WASM client and explicit answers for X.509 validation, trust
+  roots, RNG, SNI, cipher support, and Atlas requirements.
+- Phase 2 runtime gate: **plaintext round-trip requires manual Vivaldi
+  verification; TLS remains assessed, not implemented or verified.**
+
 ## Manual Vivaldi runtime result — 2026-10-22 (user-observed)
 
 - Signed Web Bundle V2 installed successfully using `vivaldi://web-app-internals`.

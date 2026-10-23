@@ -20,7 +20,7 @@
       "purpose": "any"
     }
   ],
-  "version": "0.1.0",
+  "version": "0.2.0",
   "permissions_policy": {
     "direct-sockets": ["self"],
     "cross-origin-isolated": ["self"]

@@ -1,6 +1,6 @@
 # TCP Lab — Isolated Web App
 
-Research prototype for **direct TCP networking in Vivaldi/Chromium using JavaScript**. Goal: eventually investigate direct MongoDB Atlas Wire Protocol access, without a local service or a REST proxy. **Phase 1 only tests the Direct Sockets API.**
+Research prototype for **direct TCP networking in Vivaldi/Chromium using JavaScript**. Goal: eventually investigate direct MongoDB Atlas Wire Protocol access, without a local service or a REST proxy. **Phase 2 proves plaintext HTTP bytes over Direct Sockets; TLS and MongoDB remain out of scope.**
 
 ## Target environment
 - Vivaldi 8.2.4133.91 / Chromium 152.0.7977.170
@@ -19,12 +19,13 @@ app/                          Static runtime only
   index.html
   css/style.css
   js/main.js
-  js/tcp.js
+  js/tcp.js                  TCP connect and plaintext HTTP round-trip
 scripts/build.sh              Bundle pipeline handoff to Codex
 scripts/verify.sh             Bundle validation handoff
 scripts/check.py              Offline static sanity checks
 specs/                        (future protocol experiments; not in Phase 1)
-tests/test_project.py         Offline tests
+tests/test_project.py         Offline project checks
+tests/test_tcp.mjs            Fake-socket HTTP stream tests
 docs/ARCHITECTURE.md          Decisions & boundaries
 docs/EXPERIMENTS.md           Manual test record
 tasks/PHASE_1.md              Codex implementation task
@@ -92,8 +93,12 @@ Use Go build-time tools where practical; project has **no Node.js runtime, npm d
 1. Open `vivaldi://web-app-internals`.
 2. Under **Developer Mode**, select **Install IWA from Signed Web Bundle**.
 3. Select `dist/tcp-lab.swbn`.
-4. Launch TCP Lab, check API availability and press **Test TCP**.
-5. Record observed behavior in `docs/EXPERIMENTS.md`.
+4. Launch TCP Lab, check API availability, press **Test TCP**, then press
+   **HTTP round-trip**.
+5. To update an installed app, install the newly generated `.swbn` from the
+   same page; the unchanged signing key preserves the app identity.
+6. Record the visible status line, byte count, endpoint, and errors in
+   `docs/EXPERIMENTS.md`.
 
 Do not add Atlas passwords, SRV records, or MongoDB operations at this stage. TCP port 80 on example.com is only a connectivity probe, not a protocol validation.
 
