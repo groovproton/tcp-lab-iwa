@@ -54,3 +54,17 @@ Record date, app bundle identity, selected host/port, exact visible errors, and 
 - User-triggered TCP connect to `example.com:80` succeeded in approximately 553 ms.
 - This validates a **TCP connection only**. No application payload read/write or TLS handshake has yet been demonstrated.
 - Next experiment: `tasks/PHASE_2.md`.
+
+## Phase 2A — raw HTTP over TCP, verified in Vivaldi (2026-10-22 local / 2026-10-23 UTC)
+
+User-observed runtime results from installed TCP Lab Phase 2 on Vivaldi / macOS ARM64:
+
+- TCP connect: `example.com:80` succeeded (~559 ms in the screenshot log).
+- HTTP round-trip via raw TCPSocket streams: **PASS**.
+- Status: `HTTP/1.1 200 OK`.
+- Bytes read: **932**.
+- Elapsed time: **556 ms**.
+- Response included HTTP headers (`Transfer-Encoding: chunked`, `Connection: close`) and the Example Domain HTML payload.
+- No `fetch()`, browser HTTP API, proxy, backend, or TLS was used for the raw socket request.
+- Scope of proof: application-level bidirectional plaintext TCP exchange. TLS, MongoDB protocol, and Atlas connectivity remain unverified.
+
