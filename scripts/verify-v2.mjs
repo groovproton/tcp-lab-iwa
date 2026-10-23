@@ -63,5 +63,9 @@ for (const [path, [width, height]] of requiredIcons) {
   const view = new DataView(body.buffer, body.byteOffset, body.byteLength);
   if (view.getUint32(16) !== width || view.getUint32(20) !== height) throw new Error(`invalid PNG dimensions: ${path}`);
 }
+for (const path of ['/js/tls.js', '/js/tls-engine.js']) {
+  const url = `${expectedOrigin}${path.slice(1)}`;
+  if (!urls.includes(url) || webBundle.getResponse(url).body.byteLength === 0) throw new Error(`missing TLS prototype asset ${url}`);
+}
 console.log(`Verified V2 integrity block, ${signatures.length} signature(s), and webBundleId ${expectedId}`);
 console.log(`Verified b2 metadata: no primary URL, ${urls.length} ${expectedOrigin} resource(s), manifest and icons present`);

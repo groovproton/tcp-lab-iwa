@@ -2,13 +2,16 @@
 
 ## Result
 
-Phase 3 stops before shipping a TLS engine. No native TLS upgrade is exposed
-by the Direct Sockets API used by this IWA, and no maintained, browser-ready
-TLS/WASM dependency could be compiled and tested reproducibly in the current
-workspace. The app therefore does not add an HTTPS button or claim TLS support.
+Phase 3A selected a browser-targeted JavaScript/WebCrypto engine and added an
+isolated adapter, but the default UI still does not expose HTTPS. No native
+TLS upgrade is exposed by Direct Sockets; TLS is provided only by the opt-in
+engine described in `docs/TLS_ENGINE_SELECTION.md`. Installed-Vivaldi browser
+compatibility remains unverified.
 
-This is an intentional fail-closed result: there is no insecure mode, no
-certificate bypass, and no `fetch()` fallback.
+The adapter is fail-closed: there is no insecure mode, no certificate bypass,
+and no `fetch()` fallback. The selected engine may use AIA fetching when an
+intermediate is absent; this must be audited or disabled before production
+use because the IWA's required transport is Direct Sockets only.
 
 ## Direct Sockets evidence
 
@@ -62,5 +65,7 @@ adding browser transport. The adapter must define:
 - A test fixture for valid certificates, expired/untrusted certificates, and
   hostname mismatch. Invalid cases must fail closed.
 
-Until those checks pass locally and in Vivaldi, HTTPS over Direct Sockets is
-not implemented.
+The Phase 3A candidate comparison and concrete Node/browser-bundle results are
+in `docs/TLS_ENGINE_SELECTION.md`. Until the adapter passes an installed
+Vivaldi test and its certificate/AIA behavior is audited, HTTPS is not part of
+the default application UI.

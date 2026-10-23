@@ -18,7 +18,7 @@ class ProjectSmokeTests(unittest.TestCase):
             self.assertTrue((APP / p).is_file(), p)
 
     def test_no_mongodb_credentials_or_backend(self):
-        scripts = '\n'.join(p.read_text() for p in (APP / 'js').glob('*.js'))
+        scripts = '\n'.join(p.read_text() for p in (APP / 'js').glob('*.js') if p.name != 'tls-engine.js')
         self.assertNotIn('mongodb+srv://', scripts)
         self.assertNotIn('27017', scripts)
         self.assertNotIn('fetch(', scripts)

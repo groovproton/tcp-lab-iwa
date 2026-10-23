@@ -58,6 +58,21 @@ Record date, app bundle identity, selected host/port, exact visible errors, and 
 - Phase 3 status: **BLOCKED at TLS engine/toolchain feasibility; no TLS or
   MongoDB implementation.**
 
+## Phase 3A TLS engine evaluation — 2026-10-22
+
+- `node-forge@1.3.2`: browser-compatible API, but no TLS 1.3 cipher constants.
+  A Node handshake reached HTTP only when certificate verification was
+  explicitly bypassed; an empty trust store failed closed. Rejected.
+- `@joclaim/tls@0.3.2`: browser-targeted WebCrypto engine. Bundled with
+  `esbuild@0.25.8` as 565,596-byte minified ESM with 258 inputs and no build
+  errors. Node proof against `example.com:443` passed TLS 1.3,
+  `TLS_CHACHA20_POLY1305_SHA256`, four-certificate chain validation, and
+  encrypted `HTTP/1.1 200 OK` (926 bytes).
+- Added an isolated adapter at `app/js/tls.js` and bundled engine at
+  `app/js/tls-engine.js`; it is not imported by the default UI.
+- Browser/Vivaldi TLS result: **UNVERIFIED**. The Node proof is not a claim of
+  installed-IWA compatibility. No MongoDB or credentials used.
+
 ## Manual Vivaldi runtime result — 2026-10-22 (user-observed)
 
 - Signed Web Bundle V2 installed successfully using `vivaldi://web-app-internals`.
