@@ -1,6 +1,6 @@
 # Codex instructions — TCP Lab IWA
 
-Read `README.md`, `docs/ARCHITECTURE.md`, and `tasks/PHASE_1.md` before modifying code.
+Read `README.md`, `docs/ARCHITECTURE.md`, and `tasks/PHASE_2.md` before modifying Phase 2 code. Keep `tasks/PHASE_1.md` as the baseline record.
 
 ## Mission
 Produce a **real, installable Signed Web Bundle** for Vivaldi 8.2 / Chromium 152 on macOS ARM64 and empirically verify Direct Sockets API availability. This is an exploratory browser-native networking project, **not** a MongoDB client yet.
@@ -15,8 +15,8 @@ Produce a **real, installable Signed Web Bundle** for Vivaldi 8.2 / Chromium 152
 - Keep output in `dist/`; private signing keys belong in ignored `keys/`, never commit them.
 - Be precise: build validation != runtime success. Record manual Vivaldi results separately.
 
-## First work item
-Complete `tasks/PHASE_1.md`. Replace the placeholder `scripts/build.sh` with a working reproducible SWBN build/sign flow; ensure `make bundle` produces `dist/tcp-lab.swbn`, `make verify` checks that file. Use the same signing key for rebuilds, as key changes alter IWA identity.
+## Current work item — Phase 2
+Phase 1 has been installed and TCP connected in Vivaldi (user-observed). Implement `tasks/PHASE_2.md` next: prove HTTP request/response bytes using TCPSocket and investigate native TLS feasibility. Retain signed-bundle identity, do not implement MongoDB, and do not claim Phase 2 runtime verification before user tests.
 
 ## Acceptance gates
 1. `make check` passes.
